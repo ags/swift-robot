@@ -7,6 +7,32 @@ enum Direction: String, Printable {
     var description: String {
         return String(self.rawValue)
     }
+
+    var left: Direction {
+        switch (self) {
+        case .North:
+            return .West
+        case .East:
+            return .North
+        case .South:
+            return .East
+        case .West:
+            return .South
+        }
+    }
+
+    var right: Direction {
+        switch (self) {
+        case .North:
+            return .East
+        case .East:
+            return .South
+        case .South:
+            return .West
+        case .West:
+            return .North
+        }
+    }
 }
 
 struct Placement: Printable {
@@ -32,6 +58,14 @@ struct Placement: Printable {
             return nil
         }
     }
+
+    func left() -> Placement {
+        return Placement(x: x, y: y, facing: facing.left)
+    }
+
+    func right() -> Placement {
+        return Placement(x: x, y: y, facing: facing.right)
+    }
 }
 
 class Robot {
@@ -39,6 +73,18 @@ class Robot {
 
     func move() {
         if let newPlacement = placement?.next() {
+            self.placement = newPlacement
+        }
+    }
+
+    func turnLeft() {
+        if let newPlacement = placement?.left() {
+            self.placement = newPlacement
+        }
+    }
+
+    func turnRight() {
+        if let newPlacement = placement?.right() {
             self.placement = newPlacement
         }
     }
@@ -65,6 +111,22 @@ robot.move()
 reportRobotLocation(robot)
 
 robot.placement = Placement(x: 0, y: 0, facing: Direction.South)
+reportRobotLocation(robot)
+robot.move()
+reportRobotLocation(robot)
+
+robot.placement = Placement(x: 0, y: 0, facing: Direction.North)
+reportRobotLocation(robot)
+for _ in 1...5 {
+    robot.move()
+    reportRobotLocation(robot)
+}
+
+robot.turnLeft()
+reportRobotLocation(robot)
+
+robot.placement = Placement(x: 0, y: 0, facing: Direction.North)
+robot.turnRight()
 reportRobotLocation(robot)
 robot.move()
 reportRobotLocation(robot)
